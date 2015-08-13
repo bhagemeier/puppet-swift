@@ -68,6 +68,11 @@
 #    (optional) Port value for UDP receiver, if enabled.
 #    Defaults to undef.
 #
+# [*log_requests*]
+#   (optional) Whether or not log every request. reduces logging output if false,
+#   good for seeing errors if true
+#   Defaults to true.
+#
 class swift::storage::all(
   $storage_local_net_ip,
   $devices            = '/srv/node',
@@ -85,6 +90,7 @@ class swift::storage::all(
   $log_udp_port       = undef,
   $incoming_chmod     = '0644',
   $outgoing_chmod     = '0644',
+  $log_requests       = true,
 ) {
   if ($incoming_chmod == '0644') {
     warning('The default incoming_chmod set to 0644 may yield in error prone directories and will be changed in a later release.')
@@ -114,6 +120,7 @@ class swift::storage::all(
     log_facility     => $log_facility,
     incoming_chmod   => $incoming_chmod,
     outgoing_chmod   => $outgoing_chmod,
+    log_requests     => $log_requests,
   }
 
   swift::storage::server { $container_port:
@@ -124,6 +131,7 @@ class swift::storage::all(
     allow_versions   => $allow_versions,
     incoming_chmod   => $incoming_chmod,
     outgoing_chmod   => $outgoing_chmod,
+    log_requests     => $log_requests,
   }
 
   swift::storage::server { $object_port:
@@ -133,5 +141,6 @@ class swift::storage::all(
     log_facility     => $log_facility,
     incoming_chmod   => $incoming_chmod,
     outgoing_chmod   => $outgoing_chmod,
+    log_requests     => $log_requests,
   }
 }
